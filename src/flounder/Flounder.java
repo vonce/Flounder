@@ -17,6 +17,8 @@ public class Flounder {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
         // TODO code application logic here
-        Deck.deck();     
+        Deck.main();
+        String[] j = {"3c","4c","5c","7c","2c"};
+        System.out.println(Handranker.handrank(Handranker.cardtobool(j)));
     }
 }
