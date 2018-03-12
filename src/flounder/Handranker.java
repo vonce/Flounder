@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 package flounder;
-
-import java.util.Arrays;
-
 /**
  *
  * @author Vince
@@ -16,74 +13,33 @@ public class Handranker {
     static int[] rankarray = new int[5];
     static int count;
     static String[] s;
-    public static boolean[] cardtobool(String[] cardarr){//convert card string array to bool array
-        Arrays.fill(h, false);//fills 52 bool array with false
-        for (String card : cardarr){//for every card string look in hashmap for index number 0-51(A-2)
-            h[Deck.cardtoint.get(card)] = true;//change boolean in bool array to true with index number
-        }
-        return h;
-    }
-    
-    public static String[] booltocard(boolean[] boolarr){//convert bool array to card string array
-        count = 0; 
-        for (int i = 0; i < 52; i++){//count number of true in bool array
-            if (boolarr[i] == true){
-                count++;
-            }
-        }
-        int[] cardnum = new int[count];//index number array with size count
-        String[] s = new String[count];//string array with size count
-        int j = 0;
-        for (int i = 0; i < 52; i++){//add index number to array
-            if (boolarr[i] == true){
-                cardnum[j] = i;
-                j++;
-            }
-        }
-        for (int i = 0; i < cardnum.length; i++){//use index numbers to find corresponding card string array
-            s[i] = Deck.inttocard.get(cardnum[i]);
-        }
-        return s;
-    }
-    public static int choose(int n, int k){//combinator n!/(k!(n-k)!)
-        int numer = 1;
-        int denom = 1;
-        for (int i = n - k + 1; i <= n; i++){
-            numer = numer * i;
-        }
-        for (int i = 1; i <= k; i++){
-            denom = denom * i;
-        }
-        return numer/denom;
-    }
-    
+
     public static int handrank(boolean[] hand){//ranks hands returning value between 1 and 7462, there are 7462 unique ranks for 5 card hands
-        count = 0; 
-        for (int i = 0; i < 52; i++){//counts size of hand
-            if (hand[i] == true){
-                count++;
-            }
-        }
-        int j = 0;
-        int[] cardnumber = new int[count];//creates array with size of hand
-        for (int i = 0; i < 52; i++){
-            if (hand[i] == true){
-                cardnumber[j] = i;
-                j++;
-            }
-        }
-        //return straightflush(hand, cardnumber);
-        //return fourkind(hand, cardnumber);
-        //return fullhouse(hand, cardnumber);
-        //return flush(hand, cardnumber);
-        //return straight(hand, cardnumber);
-        //return threekind(hand, cardnumber);
-        return twopair(hand, cardnumber);
+        int rank;
+        int[] numarr = Tools.booltonum(hand);
+        rank = straightflush(hand, numarr);
+        if (rank != -1){return rank;}
+        rank = fourkind(hand, numarr);
+        if (rank != -1){return rank + 10;}
+        rank = fullhouse(hand, numarr);
+        if (rank != -1){return rank + 166;}
+        rank = flush(hand, numarr);
+        if (rank != -1){return rank + 322;}
+        rank = straight(hand, numarr);
+        if (rank != -1){return rank + 1599;}
+        rank = threekind(hand, numarr);
+        if (rank != -1){return rank + 1609;}
+        rank = twopair(hand, numarr);
+        if (rank != -1){return rank + 2467;}
+        rank = pair(hand, numarr);
+        if (rank != -1){return rank + 3325;}
+        rank = highcard(hand, numarr);
+        return rank + 6185;
+        
     }
     
     private static int straightflush(boolean[] boolarr, int[] cardnum){//Assess cards for straight flush. returns 1-10
-        count = 0;
-        for (int num : cardnum){//for every card starting from highest value lowest index (0:A - 51:2)
+        for (int num : cardnum){
             count = 0;
             for (int i = 1; i < 5; i++){//from num card, add to count if next card with same suit == true
                 if ((num < 36) && (boolarr[num + i * 4] == true)){
@@ -103,7 +59,6 @@ public class Handranker {
         return -1;
     }
     private static int fourkind(boolean[] boolarr, int[] cardnum){//Assess cards for four of a kind. returns 1-156
-        count = 0;
         for (int num : cardnum){
             count = 0;
             for (int i = 0; i < 4; i++){//count from multiple of 4 for 4 trues
@@ -125,7 +80,6 @@ public class Handranker {
         return -1;
     }
     private static int fullhouse(boolean[] boolarr, int[] cardnum){//Assess cards for fullhouse. returns 1-156
-        count = 0;
         for (int num : cardnum){
             count = 0;
             for (int i = 0; i < 4; i++){
@@ -163,7 +117,7 @@ public class Handranker {
             for (int i = 0; i < 13; i++){//check within suit for flush
                 if ((num + 4 * i < 52) && (boolarr[num + 4 * i] == true)){
                     sum = 0;
-                    rankarray[count] = ((num + 4 * i) + (num + 4 * i) % 4)/4;//record value of each flush card
+                    rankarray[count] = (num - num % 4 + 4 * i)/4;//record value of each flush card
                     if (count == 0){
                         c = rankarray[count];//removing straights from the final number means we need to reduce the score based on highest card. 
                         if (c != 0){//Aces have 2 instances where it will be the highest card, others have 1, so from A to K we have to add our extra straight
@@ -171,15 +125,15 @@ public class Handranker {
                         }
                     }
                     for (int j = k; j < rankarray[count]; j++){//summing combination totals to get accurate ranks
-                        sum = sum + choose(Math.abs(j - 12), Math.abs(count - 4));
+                        sum = sum + Tools.choose(Math.abs(j - 12), Math.abs(count - 4));
                     }
                     k = rankarray[count] + 1;
                     if (count == 0){rankarray[count] = sum -rankarray[count];}
                     rankarray[count] = sum;
                     count++;
-                }
-                if (count == 5){
-                    return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
+                    if (count == 5){
+                        return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
+                    }
                 }
             }
         }
@@ -187,7 +141,6 @@ public class Handranker {
     }
 
     private static int straight(boolean[] boolarr, int[] cardnum){//Assess cards for straight. returns 1-10
-        count = 0;
         for (int num : cardnum){
             count = 0;
             for (int i = 1; i < 5; i++){
@@ -206,10 +159,8 @@ public class Handranker {
                             break;
                         }
                     }
-                }
-                if ((num >= 36) && (num < 40) && (count == 3)){//count A for wheel case
                     for ( int j = 0; j < 4; j++){
-                        if (boolarr[num - num % 4 + j] == true){
+                        if ((boolarr[j] == true) && (count == 3)){
                             count++;
                             break;
                         }
@@ -273,19 +224,17 @@ public class Handranker {
                                 count++;
                             }
                             if (count == 2){
-                                rankarray[1] = ((num2 - num2 % 4)/4) - 1;
+                                rankarray[1] = ((num2 - num2 % 4)/4);
                                 for (int num3 : cardnum){
                                     if ((num - num % 4 != num3 - num3 % 4) && (num2 - num2 % 4 != num3 - num3 % 4)){
                                     rankarray[2] = ((num3 - num3 % 4)/4);//kicker
-                                    if (rankarray[2] < rankarray[1]){rankarray[2]++;}
-                                    if (rankarray[2] < rankarray[0]){rankarray[2]++;}
-                                    for (int k = 1; k < rankarray[0]; k++){//summing combination totals to get accurate ranks
-                                        sum = sum + Math.abs(k - 11);
+                                    if (rankarray[1] >= rankarray[2]){rankarray[2]++;}
+                                    if (rankarray[0] >= rankarray[2]){rankarray[2]++;}
+                                    for (int k = 0; k < rankarray[0]; k++){//summing combination totals to get accurate ranks
+                                        sum = sum + Math.abs(k - 12);
                                     }
+                                    rankarray[1] = rankarray[1] - rankarray[0] - 1;
                                     rankarray[0] = sum;
-                                    for (int a : rankarray){
-                                        System.out.println("a" + a);
-                                    }
                                     return (rankarray[0] + rankarray[1]) * 11 + rankarray[2] - 1;//return 1-858
                                     }
                                 }
@@ -296,5 +245,70 @@ public class Handranker {
             }
         }
     return -1;
+    }
+    
+    private static int pair(boolean[] boolarr, int[] cardnum){//Assess cards for pair. returns 1-2860
+        for (int num : cardnum){
+            int l = 1;
+            int sum = 0;
+            count = 0;
+            for (int i = 0; i < 4; i++){//check for 2 trues within card value
+                if (boolarr[num - num % 4 + i] == true){
+                    count++;
+                }
+                if (count == 2){
+                    rankarray[0] = (num - num % 4)/4;
+                    for (int num2 : cardnum){
+                        if (rankarray[0] != (num2 - num2 % 4)/4){//find highest kicker cards
+                            rankarray[count - 1] = (num2 - num2 % 4)/4;
+                            count++;
+                            if (count == 5){//once we have 5 cards total, find combinations to get proper ranks
+                                for (int j = 1; j < 4; j++){
+                                    sum = 0;
+                                    if (rankarray[j] < rankarray[0]){
+                                        rankarray[j]++;
+                                    }
+                                    for (int k = l; k < rankarray[j]; k++){//summing combination totals to get accurate ranks
+                                        sum = sum + Tools.choose(Math.abs(k - 12), Math.abs(j - 3));
+                                    }
+                                    l = rankarray[j] + 1;
+                                    rankarray[j] = sum;
+                                }
+                                return rankarray[0] * 220 + rankarray[1] + rankarray[2] + rankarray[3] + 1;
+                            }
+                        }
+                    }    
+                }
+            }
+        }
+    return -1;
+    }
+    
+    private static int highcard(boolean[] boolarr, int[] cardnum){//Assess cards for best high cards. returns 1-1277
+        int sum;
+        int k = 0;
+        int c = 0;
+        count = 0;
+        for (int num : cardnum){
+            sum = 0;
+            rankarray[count] = (num - num % 4)/4;//record value of each high card
+            if (count == 0){
+                c = rankarray[count];//removing straights from the final number means we need to reduce the score based on highest card. 
+                if (c != 0){//Aces have 2 instances where it will be the highest card, others have 1, so from A to K we have to add our extra straight
+                    c++;
+                }
+            }
+            for (int j = k; j < rankarray[count]; j++){//summing combination totals to get accurate ranks
+                sum = sum + Tools.choose(Math.abs(j - 12), Math.abs(count - 4));
+            }
+            k = rankarray[count] + 1;
+            if (count == 0){rankarray[count] = sum -rankarray[count];}
+            rankarray[count] = sum;
+            count++;
+            if (count == 5){
+                return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
+            }
+        }
+        return -1;
     }
 }

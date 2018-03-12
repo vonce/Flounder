@@ -10,19 +10,23 @@ import java.util.*;
  * @author Vince
  */
 public class Flounder {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         System.out.println("Hello, World!");
         // TODO code application logic here
         Deck.main();
-        String[] j = {"Ad","As","Qd","Qh","Kc"};
-        System.out.println(Handranker.handrank(Handranker.cardtobool(j)));
-        String[] b = Handranker.booltocard(Handranker.cardtobool(j));
-        //for (String a : b){
-        //    System.out.println(a);
+        //int count = 0;
+        //int[] array = new int[7462];
+        //for (int i = 0; i < Tools.choose(52, 5); i++){
+        //    array[Handranker.handrank(Combinator.combinations(5)) - 1]++;
+        //    count++;
         //}
+        //for (int k = 0; k < 7462; k++){
+        //    System.out.println(k + ": " + array[k]);
+        //}
+        String[] a = {"As","Qs","Ks","Js","9s"};
+        String[] b = {"2d","3s","4d","5s","7d"};
+        System.out.println("a: " + Handranker.handrank(Tools.cardtobool(a)));
+        System.out.println("b: " + Handranker.handrank(Tools.cardtobool(b)));
+        String[] c = Tools.booltocard(Tools.cardtobool(a));
     }
 }
