@@ -14,19 +14,19 @@ public class Flounder {
         System.out.println("Hello, World!");
         // TODO code application logic here
         Deck.main();
-        //int count = 0;
-        //int[] array = new int[7462];
-        //for (int i = 0; i < Tools.choose(52, 5); i++){
-        //    array[Handranker.handrank(Combinator.combinations(5)) - 1]++;
-        //    count++;
-        //}
-        //for (int k = 0; k < 7462; k++){
-        //    System.out.println(k + ": " + array[k]);
-        //}
-        String[] a = {"As","Qs","Ks","Js","9s"};
-        String[] b = {"2d","3s","4d","5s","7d"};
-        System.out.println("a: " + Handranker.handrank(Tools.cardtobool(a)));
-        System.out.println("b: " + Handranker.handrank(Tools.cardtobool(b)));
-        String[] c = Tools.booltocard(Tools.cardtobool(a));
+        String[] c = {"3h","4d","Qs"};
+        String[] q = {"3d","4h"};
+        String[] r = {"Qh","5s"};
+        BitSet x = Tools.cardtobit(q);
+        BitSet y = Tools.cardtobit(r);
+        BitSet[] d = {x,y};
+        double[] array = Calculate.equity(c, q, r);
+        for (double i: array){
+            System.out.println(i);
+        }
+        //String[] a = {"As","Qs","Ks","Js","Ts"};
+        //String[] b = {"2d","3s","4d","5s","6d"};
+        //System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
+        //System.out.println("b: " + Handranker.handrank(Tools.cardtobit(b)));
     }
 }

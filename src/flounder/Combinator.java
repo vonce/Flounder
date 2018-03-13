@@ -5,55 +5,73 @@
  */
 package flounder;
 
-import java.util.Arrays;
+import java.util.BitSet;
+import java.io.*;
 
 /**
  *
  * @author Vince
  */
-public class Combinator {
-    static boolean[] h = new boolean[52];
-    static int[] numarr;
-    static int number;
-    static int iter = 0;
-    static int alliter = 0;
-
-    public static boolean[] combinations(int n, int[] r){
-        number = n - 1;
-        if (iter == 0){
-            alliter = Tools.choose(52, n);
-            numarr = new int[n];
-            for(int i = 0; i < n; i++){
-                numarr[i] = i;
+public class Combinator{
+    Combinator(int num){
+        this.n = num;
+        this.alliter = Tools.choose(52, num);
+        this.numarr = new int[52];
+        this.removal = Tools.bittonum(h);
+        this.iterarr = new int[num];
+        for(int i = 0; i < 52; i++){
+            this.numarr[i] = i;
+        }
+    }
+    Combinator(int num, BitSet r){
+        this.n = num;
+        this.alliter = Tools.choose(52 - r.cardinality(), num);
+        this.numarr = new int[52 - r.cardinality()];
+        this.removal = Tools.bittonum(r);
+        this.iterarr = new int[num];
+        this.k = 0;
+        for (int i = 0; i < 52; i++){
+            numarr[i - k] = i;
+            for (int j : removal){
+                if (j == i){
+                    k++;
+                    break;
+                }
             }
         }
-        Arrays.fill(h, false);
-        for (int num : numarr){
-            h[num] = true;
-        }
+    }
+    static int n;
+    static BitSet h = new BitSet(52);
+    static int alliter;
+    static int[] numarr;
+    static int[] removal;
+    static int[] iterarr;
+    static int k;
+    static int iter = 0;
+    
+    public static BitSet combinations(){
+        h.clear();
         if (iter == 0){
+            for (int i = 0; i < iterarr.length; i++){
+                h.set(numarr[i]);
+                iterarr[i] = i;
+            }
             iter++;
             return h;
         }
         if (iter < alliter){
-            for (int i = 0; i <= number; i++){
-                if ((numarr[i] == 51 - number + i) && (i - 1 >= 0)){
-                    numarr[i - 1]++;
-                    numarr[i] = numarr[i - 1];
+            for (int i = 0; i < iterarr.length; i++){
+                if ((iterarr[i] == numarr.length + (i - n)) && (i - 1 >= 0)){
+                    iterarr[i - 1]++;
+                    iterarr[i] = iterarr[i - 1];
                 }
             }
-            numarr[number]++;
-            iter++;
-            for (int a : numarr){
-                //System.out.println("numarr: " + a);
+        iterarr[n - 1]++;
+        iter++;
+            for (int i: iterarr){
+                h.set(numarr[i]);
             }
         }
-        else{
-            System.out.println("done");
-        }
         return h;
-    }
-    public static void remove(boolean[] boolarr){
-        
     }
 }

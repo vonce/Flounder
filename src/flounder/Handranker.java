@@ -4,19 +4,21 @@
  * and open the template in the editor.
  */
 package flounder;
+
+import java.util.BitSet;
 /**
  *
  * @author Vince
  */
 public class Handranker { 
-    static boolean[] h = new boolean[52];
+    static BitSet h = new BitSet(52);
     static int[] rankarray = new int[5];
     static int count;
     static String[] s;
 
-    public static int handrank(boolean[] hand){//ranks hands returning value between 1 and 7462, there are 7462 unique ranks for 5 card hands
+    public static int handrank(BitSet hand){//ranks hands returning value between 1 and 7462, there are 7462 unique ranks for 5 card hands
         int rank;
-        int[] numarr = Tools.booltonum(hand);
+        int[] numarr = Tools.bittonum(hand);
         rank = straightflush(hand, numarr);
         if (rank != -1){return rank;}
         rank = fourkind(hand, numarr);
@@ -38,17 +40,17 @@ public class Handranker {
         
     }
     
-    private static int straightflush(boolean[] boolarr, int[] cardnum){//Assess cards for straight flush. returns 1-10
+    private static int straightflush(BitSet bitarr, int[] cardnum){//Assess cards for straight flush. returns 1-10
         for (int num : cardnum){
             count = 0;
             for (int i = 1; i < 5; i++){//from num card, add to count if next card with same suit == true
-                if ((num < 36) && (boolarr[num + i * 4] == true)){
+                if ((num < 36) && (bitarr.get(num + i * 4) == true)){
                     count++;
                 }
-                if ((num >= 36) && (num < 40) && (i < 4) && (boolarr[num + i * 4] == true)){//wheel case
+                if ((num >= 36) && (num < 40) && (i < 4) && (bitarr.get(num + i * 4) == true)){//wheel case
                     count++;
                 }
-                if ((num >= 36) && (num < 40) && (count == 3) && (boolarr[num % 4])){//count wrap around ace
+                if ((num >= 36) && (num < 40) && (count == 3) && (bitarr.get(num % 4))){//count wrap around ace
                     count++;
                 }
                 if (count == 4){//once 4 are counted return highest value lowest index
@@ -58,11 +60,11 @@ public class Handranker {
         }
         return -1;
     }
-    private static int fourkind(boolean[] boolarr, int[] cardnum){//Assess cards for four of a kind. returns 1-156
+    private static int fourkind(BitSet bitarr, int[] cardnum){//Assess cards for four of a kind. returns 1-156
         for (int num : cardnum){
             count = 0;
             for (int i = 0; i < 4; i++){//count from multiple of 4 for 4 trues
-                if (boolarr[num - num % 4 + i] == true){
+                if (bitarr.get(num - num % 4 + i) == true){
                     count++;
                 }
                 if (count == 4){
@@ -79,11 +81,11 @@ public class Handranker {
         }
         return -1;
     }
-    private static int fullhouse(boolean[] boolarr, int[] cardnum){//Assess cards for fullhouse. returns 1-156
+    private static int fullhouse(BitSet bitarr, int[] cardnum){//Assess cards for fullhouse. returns 1-156
         for (int num : cardnum){
             count = 0;
             for (int i = 0; i < 4; i++){
-                if (boolarr[num - num % 4 + i] == true){//count from multiple of 4 for 3 trues
+                if (bitarr.get(num - num % 4 + i) == true){//count from multiple of 4 for 3 trues
                     count++;
                 }
                 if (count >= 3){
@@ -92,7 +94,7 @@ public class Handranker {
                         if (num - num % 4 != num2 - num2 % 4){//find pair != trip value
                             count = 0;
                             for (int j = 0; j < 4; j++){
-                                if (boolarr[num2 - num2 % 4 + j] == true){//count from multiple of 4 for 2 trues
+                                if (bitarr.get(num2 - num2 % 4 + j) == true){//count from multiple of 4 for 2 trues
                                     count++;
                                 }
                                 if (count >= 2){
@@ -108,14 +110,14 @@ public class Handranker {
         }
         return -1;
     }
-    private static int flush(boolean[] boolarr, int[] cardnum){//Assess cards for flush. returns 1-1277
+    private static int flush(BitSet bitarr, int[] cardnum){//Assess cards for flush. returns 1-1277
         int sum;
         int k = 0;
         int c = 0;
         for (int num : cardnum){
             count = 0;
             for (int i = 0; i < 13; i++){//check within suit for flush
-                if ((num + 4 * i < 52) && (boolarr[num + 4 * i] == true)){
+                if ((num + 4 * i < 52) && (bitarr.get(num + 4 * i) == true)){
                     sum = 0;
                     rankarray[count] = (num - num % 4 + 4 * i)/4;//record value of each flush card
                     if (count == 0){
@@ -140,13 +142,13 @@ public class Handranker {
         return -1;
     }
 
-    private static int straight(boolean[] boolarr, int[] cardnum){//Assess cards for straight. returns 1-10
+    private static int straight(BitSet bitarr, int[] cardnum){//Assess cards for straight. returns 1-10
         for (int num : cardnum){
             count = 0;
             for (int i = 1; i < 5; i++){
                 if (num < 36){
                     for (int j = 0; j < 4; j++){//from starting card, check next multiple of 4 for a true
-                        if (boolarr[num - num % 4 + i * 4 + j] == true){
+                        if (bitarr.get(num - num % 4 + i * 4 + j) == true){
                             count++;
                             break;
                         }
@@ -154,13 +156,13 @@ public class Handranker {
                 }
                 if ((num >= 36) && (num < 40) && (i < 4)){//wheel
                     for ( int j = 0; j < 4; j++){
-                        if (boolarr[num - num % 4 + i * 4 + j] == true){
+                        if (bitarr.get(num - num % 4 + i * 4 + j) == true){
                             count++;
                             break;
                         }
                     }
                     for ( int j = 0; j < 4; j++){
-                        if ((boolarr[j] == true) && (count == 3)){
+                        if ((bitarr.get(j) == true) && (count == 3)){
                             count++;
                             break;
                         }
@@ -174,12 +176,12 @@ public class Handranker {
         return -1;
     }
     
-    private static int threekind(boolean[] boolarr, int[] cardnum){//Assess cards for three of a kind. returns 1-858
+    private static int threekind(BitSet bitarr, int[] cardnum){//Assess cards for three of a kind. returns 1-858
         for (int num : cardnum){
             int sum = 0;
             count = 0;
             for (int i = 0; i < 4; i++){//check for 3 trues within card value
-                if (boolarr[num - num % 4 + i] == true){
+                if (bitarr.get(num - num % 4 + i) == true){
                     count++;
                 }
                 if (count == 3){
@@ -207,12 +209,12 @@ public class Handranker {
         return -1;
     }
     
-    private static int twopair(boolean[] boolarr, int[] cardnum){//Assess cards for two pair. returns 1-858
+    private static int twopair(BitSet bitarr, int[] cardnum){//Assess cards for two pair. returns 1-858
         for (int num : cardnum){
             int sum = 0;
             count = 0;
             for (int i = 0; i < 4; i++){//check for 2 trues within card value
-                if (boolarr[num - num % 4 + i] == true){
+                if (bitarr.get(num - num % 4 + i) == true){
                     count++;
                 }
                 if (count == 2){
@@ -220,7 +222,7 @@ public class Handranker {
                     for (int num2 : cardnum){
                         count = 0;
                         for (int j = 0; j < 4; j++){//check for 2 trues within card value
-                            if ((boolarr[num2 - num2 % 4 + j] == true) && (num - num % 4 != num2 - num2 % 4)){
+                            if ((bitarr.get(num2 - num2 % 4 + j) == true) && (num - num % 4 != num2 - num2 % 4)){
                                 count++;
                             }
                             if (count == 2){
@@ -247,13 +249,13 @@ public class Handranker {
     return -1;
     }
     
-    private static int pair(boolean[] boolarr, int[] cardnum){//Assess cards for pair. returns 1-2860
+    private static int pair(BitSet bitarr, int[] cardnum){//Assess cards for pair. returns 1-2860
         for (int num : cardnum){
             int l = 1;
             int sum = 0;
             count = 0;
             for (int i = 0; i < 4; i++){//check for 2 trues within card value
-                if (boolarr[num - num % 4 + i] == true){
+                if (bitarr.get(num - num % 4 + i) == true){
                     count++;
                 }
                 if (count == 2){
@@ -284,7 +286,7 @@ public class Handranker {
     return -1;
     }
     
-    private static int highcard(boolean[] boolarr, int[] cardnum){//Assess cards for best high cards. returns 1-1277
+    private static int highcard(BitSet bitarr, int[] cardnum){//Assess cards for best high cards. returns 1-1277
         int sum;
         int k = 0;
         int c = 0;
