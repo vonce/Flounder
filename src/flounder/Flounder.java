@@ -14,19 +14,30 @@ public class Flounder {
         System.out.println("Hello, World!");
         // TODO code application logic here
         Deck.main();
-        String[] c = {"3h","4d","Qs"};
-        String[] q = {"3d","4h"};
-        String[] r = {"Qh","5s"};
-        BitSet x = Tools.cardtobit(q);
-        BitSet y = Tools.cardtobit(r);
-        BitSet[] d = {x,y};
-        double[] array = Calculate.equity(c, q, r);
-        for (double i: array){
-            System.out.println(i);
-        }
-        //String[] a = {"As","Qs","Ks","Js","Ts"};
-        //String[] b = {"2d","3s","4d","5s","6d"};
-        //System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
-        //System.out.println("b: " + Handranker.handrank(Tools.cardtobit(b)));
+        String[] c = {};
+        String[] f = {"As","Ks"};
+        String[] g = {"Ac","Kc"};
+        String[] h = {"Qs","Js"};
+        String[] z = {"Qc","Jc"};
+        String[] x = {"Ts","9s"};
+        String[] k = {"Tc","9c"};
+        String[] l = {"8s","7s"};
+        String[] m = {"8c","7c"};
+        String[] n = {"6s","5s"};
+        String[] o = {"6c","5c"};
+        //double[][] array = Calculate.equity(c, f, g, h, z, x, k, l, m);
+        //for (double[] i: array){
+        //    for (double j: i){
+        //        System.out.print(j + " ");
+        //    }
+        //    System.out.println(" ");
+        //}
+        //System.out.println(" ");
+        //array = Calculate.equity(c, q, r);
+
+        String[] a = {"Js","Qs","Qd","4s","3s","2s","2d"};
+        String[] b = {"As","Ks","Qs","Js","9s","Qd","Ad"};
+        System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
+        System.out.println("b: " + Handranker.handrank(Tools.cardtobit(b)));
     }
 }

@@ -114,27 +114,35 @@ public class Handranker {
         int sum;
         int k = 0;
         int c = 0;
+        count = 0;
         for (int num : cardnum){
-            count = 0;
             for (int i = 0; i < 13; i++){//check within suit for flush
                 if ((num + 4 * i < 52) && (bitarr.get(num + 4 * i) == true)){
-                    sum = 0;
                     rankarray[count] = (num - num % 4 + 4 * i)/4;//record value of each flush card
-                    if (count == 0){
-                        c = rankarray[count];//removing straights from the final number means we need to reduce the score based on highest card. 
-                        if (c != 0){//Aces have 2 instances where it will be the highest card, others have 1, so from A to K we have to add our extra straight
-                            c++;
-                        }
-                    }
-                    for (int j = k; j < rankarray[count]; j++){//summing combination totals to get accurate ranks
-                        sum = sum + Tools.choose(Math.abs(j - 12), Math.abs(count - 4));
-                    }
-                    k = rankarray[count] + 1;
-                    if (count == 0){rankarray[count] = sum -rankarray[count];}
-                    rankarray[count] = sum;
+                    System.out.println(num + 4 * i + " " + rankarray[count] + " " + count);
                     count++;
-                    if (count == 5){
-                        return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
+                    if (count >= 45){
+                        count = 0;
+                        sum = 0;
+                        for (count = 0; count < 5; count++){
+                            //System.out.println(rankarray[count] + " " + count);
+                            if (count == 0){
+                                c = rankarray[count];//removing straights from the final number means we need to reduce the score based on highest card. 
+                                if (c != 0){//Aces have 2 instances where it will be the highest card, others have 1, so from A to K we have to add our extra straight
+                                    c++;
+                                }
+                            }
+                            for (int j = k; j < rankarray[count]; j++){//summing combination totals to get accurate ranks
+                                sum = sum + Tools.choose(Math.abs(j - 12), Math.abs(count - 4));
+                            }
+                            k = rankarray[count] + 1;
+                            if (count == 0){rankarray[count] = sum -rankarray[count];}
+                            rankarray[count] = sum;
+                            count++;
+                            if (count >= 5){
+                                return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
+                            }
+                        }
                     }
                 }
             }

@@ -6,73 +6,86 @@
 package flounder;
 
 import java.util.BitSet;
+import java.util.Arrays;
 /**
  *
  * @author Vince
  */
 public class Calculate {
     static BitSet h = new BitSet(52);
-    static BitSet hh = new BitSet(52);
     static double[] rankings = new double[8];
     static int r = 0;
     static String[] strarr;
-    public static double[] equity(String[] board, String[] ... hands){
+    public static double[][] equity(String[] board, String[] ... hands){
+        h.clear();
+        boolean tie = false;
         BitSet[] bh = new BitSet[hands.length];
-        double[] wins = new double[hands.length];
-        int rank;
-        int rankindex;
-        for (String i: hands[1]){
-            System.out.println(i);
-        }
+        double[][] wins = new double[hands.length][2];
+        int[] rankarr = new int[hands.length];
+        int rankindex = 0;
         for (String[] i: hands){
             h.or(Tools.cardtobit(i));
             h.or(Tools.cardtobit(board));
         }
-        BitSet b = Tools.cardtobit(board);
         for (int i = 0; i < hands.length; i++){
-            //bh[i] = Tools.cardtobit(hands[i]);
-        }
-        bh[0] = Tools.cardtobit(hands[0]);
-        bh[1] = Tools.cardtobit(hands[1]);
-        for (String i: Tools.bittocard(bh[0])){
-            System.out.println(":::" + i);
+            bh[i] = new BitSet(52);
+            bh[i].or(Tools.cardtobit(hands[i]));
         }
         Combinator combo = new Combinator(5 - board.length, h);
-        for (String i: Tools.bittocard(bh[0])){
-            System.out.println(":" + i);
-        }
         for (int i = 0; i < combo.alliter; i++){
+            tie = false;
             h.clear();
             r = 7643;
-            rank = 7643;
-            rankindex = 0;
+            Arrays.fill(rankarr, 0);
+            rankindex = -1;
 
-            hh = combo.combinations();
-            
-            hh.or(Tools.cardtobit(board));
-            for (String s: Tools.bittocard(bh[0])){
-                System.out.println("::" + s);
-            }
+            h = combo.combinations();
+            h.or(Tools.cardtobit(board));
             for (int j = 0; j < hands.length; j++){
                 h.or(bh[j]);
-                for (String k: Tools.bittocard(h)){
-                    System.out.print("!"+ k);
-                }
-                System.out.println(" ");
-                r = Handranker.handrank(hh);
-                System.out.println(r);
-                if (rank > r){
-                    rank = r;
+                rankarr[j] = Handranker.handrank(h);
+                h.andNot(bh[j]);
+            }
+            for (int j = 0; j < hands.length; j++){
+                if (r > rankarr[j]){
+                    r = rankarr[j];
                     rankindex = j;
                 }
+                else if(r == rankarr[j]){
+                    tie = true;
+                }
             }
-            wins[rankindex]++;
+            if (tie == false){
+                wins[rankindex][0]++;
+                if ((rankindex == 2) || (rankindex == 3)){
+                    for (String s: Tools.bittocard(bh[rankindex])){
+                        System.out.print(s + " ");
+                    }
+                    System.out.println(" ");
+                    System.out.print(rankindex +": ");
+                    for (String s: Tools.bittocard(h)){
+                        System.out.print(s + " ");
+                    }
+                    System.out.println(" ");
+                    for (int s: rankarr){
+                        System.out.print(s + " ");
+                    }
+                    System.out.println(" ");
+                }
+            }
+            else{
+                for (int j = 0; j < hands.length; j++){
+                    if (rankarr[j] == r){
+                        wins[j][1]++;
+                    }
+                }
+            }    
+        }
+        for (int i = 0; i < wins.length; i++){
+            //wins[i][0] = wins[i][0]/combo.alliter;
+            //wins[i][1] = wins[i][1]/combo.alliter;
         }
         return wins;
-    }
-    public static double[] equity(boolean board, String[] ... hands){
-        h.clear();
-        return equity(strarr, strarr);
     }
     
     public static double boardtexture(BitSet board){
