@@ -116,15 +116,15 @@ public class Handranker {
         int c = 0;
         count = 0;
         for (int num : cardnum){
+            count = 0;
             for (int i = 0; i < 13; i++){//check within suit for flush
                 if ((num + 4 * i < 52) && (bitarr.get(num + 4 * i) == true)){
                     rankarray[count] = (num - num % 4 + 4 * i)/4;//record value of each flush card
-                    System.out.println(num + 4 * i + " " + rankarray[count] + " " + count);
+                    //System.out.println(num + " " + (num + 4 * i)/4 + " " + rankarray[count] + " " + count);
                     count++;
-                    if (count >= 45){
-                        count = 0;
-                        sum = 0;
+                    if (count >= 5){
                         for (count = 0; count < 5; count++){
+                            sum = 0;
                             //System.out.println(rankarray[count] + " " + count);
                             if (count == 0){
                                 c = rankarray[count];//removing straights from the final number means we need to reduce the score based on highest card. 
@@ -138,8 +138,7 @@ public class Handranker {
                             k = rankarray[count] + 1;
                             if (count == 0){rankarray[count] = sum -rankarray[count];}
                             rankarray[count] = sum;
-                            count++;
-                            if (count >= 5){
+                            if (count == 4){
                                 return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
                             }
                         }

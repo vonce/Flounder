@@ -46,16 +46,16 @@ public class Combinator{
             }
         }
     }
-    static int n;
-    static BitSet h = new BitSet(52);
-    static int alliter;
-    static int[] numarr;
-    static int[] removal;
-    static int[] iterarr;
-    static int k;
-    static int iter = 0;
+    int n;
+    BitSet h = new BitSet(52);
+    int alliter;
+    int[] numarr;
+    int[] removal;
+    int[] iterarr;
+    int k;
+    int iter = 0;
     
-    public static BitSet combinations(){
+    public BitSet combinations(){
         h.clear();
         if (iter == 0){
             for (int i = 0; i < iterarr.length; i++){

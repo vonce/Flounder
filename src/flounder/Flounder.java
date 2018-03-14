@@ -14,8 +14,8 @@ public class Flounder {
         System.out.println("Hello, World!");
         // TODO code application logic here
         Deck.main();
-        String[] c = {};
-        String[] f = {"As","Ks"};
+        String[] c = {"6d","5d","4d","7d"};
+        String[] f = {"Ks","Kc"};
         String[] g = {"Ac","Kc"};
         String[] h = {"Qs","Js"};
         String[] z = {"Qc","Jc"};
@@ -25,9 +25,10 @@ public class Flounder {
         String[] m = {"8c","7c"};
         String[] n = {"6s","5s"};
         String[] o = {"6c","5c"};
-        //double[][] array = Calculate.equity(c, f, g, h, z, x, k, l, m);
-        //for (double[] i: array){
-        //    for (double j: i){
+        System.out.println(Calculate.handpercentile(f, c));
+        //float[][] array = Calculate.equity(c, n);
+        //for (float[] i: array){
+        //    for (float j: i){
         //        System.out.print(j + " ");
         //    }
         //    System.out.println(" ");
@@ -35,9 +36,9 @@ public class Flounder {
         //System.out.println(" ");
         //array = Calculate.equity(c, q, r);
 
-        String[] a = {"Js","Qs","Qd","4s","3s","2s","2d"};
-        String[] b = {"As","Ks","Qs","Js","9s","Qd","Ad"};
-        System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
-        System.out.println("b: " + Handranker.handrank(Tools.cardtobit(b)));
+        //String[] a = {"Jd","Qd","4d","3d","2d","2s","Qs"};
+        //String[] b = {"As","Ks","Qs","9s","8d"};
+        //System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
+        //System.out.println("b: " + Handranker.handrank(Tools.cardtobit(b)));
     }
 }
