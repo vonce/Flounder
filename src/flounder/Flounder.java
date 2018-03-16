@@ -14,19 +14,21 @@ public class Flounder {
         System.out.println("Hello, World!");
         // TODO code application logic here
         Deck.main();
-        String[] c = {"6d","5d","4d","7d"};
-        String[] f = {"Ks","Kc"};
-        String[] g = {"Ac","Kc"};
-        String[] h = {"Qs","Js"};
+        String[] c = {};
+        String[] f = {"6d","6c"};
+        String[] g = {"7h","7s"};
+        String[] h = {"Ah","3s"};
         String[] z = {"Qc","Jc"};
-        String[] x = {"Ts","9s"};
-        String[] k = {"Tc","9c"};
+        String[] x = {"3h","6h"};
+        String[] k = {"3c","6c"};
         String[] l = {"8s","7s"};
         String[] m = {"8c","7c"};
         String[] n = {"6s","5s"};
         String[] o = {"6c","5c"};
-        System.out.println(Calculate.handpercentile(f, c));
-        //float[][] array = Calculate.equity(c, n);
+        //System.out.println(Calculate.rankpercentile(g, c));
+        //System.out.println(Calculate.handpercentile(g, c));
+        //System.out.println(Calculate.boardtexture(c));
+        //float[][] array = Calculate.equity(c, f, g);
         //for (float[] i: array){
         //    for (float j: i){
         //        System.out.print(j + " ");
@@ -36,9 +38,9 @@ public class Flounder {
         //System.out.println(" ");
         //array = Calculate.equity(c, q, r);
 
-        //String[] a = {"Jd","Qd","4d","3d","2d","2s","Qs"};
+        String[] a = {"As","Ah","Ks","Qd","Jd"};
         //String[] b = {"As","Ks","Qs","9s","8d"};
-        //System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
+        System.out.println("a: " + Handranker.handrank(Tools.cardtobit(a)));
         //System.out.println("b: " + Handranker.handrank(Tools.cardtobit(b)));
     }
 }

@@ -15,29 +15,27 @@ public class Handranker {
     static int[] rankarray = new int[5];
     static int count;
     static String[] s;
-
+    static int rank;
     public static int handrank(BitSet hand){//ranks hands returning value between 1 and 7462, there are 7462 unique ranks for 5 card hands
-        int rank;
         int[] numarr = Tools.bittonum(hand);
-        rank = straightflush(hand, numarr);
-        if (rank != -1){return rank;}
-        rank = fourkind(hand, numarr);
-        if (rank != -1){return rank + 10;}
-        rank = fullhouse(hand, numarr);
-        if (rank != -1){return rank + 166;}
-        rank = flush(hand, numarr);
-        if (rank != -1){return rank + 322;}
-        rank = straight(hand, numarr);
-        if (rank != -1){return rank + 1599;}
-        rank = threekind(hand, numarr);
-        if (rank != -1){return rank + 1609;}
-        rank = twopair(hand, numarr);
-        if (rank != -1){return rank + 2467;}
-        rank = pair(hand, numarr);
+        //rank = straightflush(hand, numarr);
+        //if (rank != -1){return rank;}
+        //rank = fourkind(hand, numarr);
+        //if (rank != -1){return rank + 10;}
+        //rank = fullhouse(hand, numarr);
+        //if (rank != -1){return rank + 166;}
+        //rank = flush(hand, numarr);
+        //if (rank != -1){return rank + 322;}
+        //rank = straight(hand, numarr);
+        //if (rank != -1){return rank + 1599;}
+        //rank = threekind(hand, numarr);
+        //if (rank != -1){return rank + 1609;}
+        //rank = twopair(hand, numarr);
+        //if (rank != -1){return rank + 2467;}
+        rank = pair(hand);
         if (rank != -1){return rank + 3325;}
-        rank = highcard(hand, numarr);
+        rank = highcard(hand);
         return rank + 6185;
-        
     }
     
     private static int straightflush(BitSet bitarr, int[] cardnum){//Assess cards for straight flush. returns 1-10
@@ -293,29 +291,76 @@ public class Handranker {
     return -1;
     }
     
-    private static int highcard(BitSet bitarr, int[] cardnum){//Assess cards for best high cards. returns 1-1277
-        int sum;
-        int k = 0;
-        int c = 0;
-        count = 0;
-        for (int num : cardnum){
-            sum = 0;
-            rankarray[count] = (num - num % 4)/4;//record value of each high card
-            if (count == 0){
-                c = rankarray[count];//removing straights from the final number means we need to reduce the score based on highest card. 
-                if (c != 0){//Aces have 2 instances where it will be the highest card, others have 1, so from A to K we have to add our extra straight
-                    c++;
+    private static int pair(BitSet bitarr){//Assess cards for pair. returns 1-2860 
+        int bitnum = -1;
+        int bitnum2 = -1;
+        int sum = 0;
+        int rank = 0;
+        int pairrank = 0;
+        int total = 0;
+        int n;
+        for (int i = 0; i < bitarr.cardinality(); i++){
+            count = 0;
+            bitnum = bitarr.nextSetBit(bitnum + 1);
+            n = 1;
+            for (int j = 0; j < 4; j++){//check for 2 trues within card value
+                if (bitarr.get(bitnum - bitnum % 4 + j) == true){
+                    count++;
+                }
+                if (count == 2){
+                    pairrank = (bitnum - bitnum % 4)/4;
+                    total = pairrank * 220;
+                    for (int k = 0; k < bitarr.cardinality(); k++){
+                        bitnum2 = bitarr.nextSetBit(bitnum2 + 1);
+                        System.out.println(bitnum2);
+                        if (pairrank != (bitnum2 - bitnum2 % 4)/4){//find highest kicker cards
+                            rank = (bitnum2 - bitnum2 % 4)/4;
+                            count++;
+                            //once we have 5 cards total, find combinations to get proper ranks
+                                    sum = 0;
+                                    if (rank < pairrank){
+                                        rank++;
+                                    }
+                                    for (int m = n; m < rank; m++){//summing combination totals to get accurate ranks
+                                        sum = sum + Tools.choose(Math.abs(m - 12), Math.abs(k - 3));
+                                    }
+                                    n = rank + 1;
+                                    total = total + sum;
+                                
+                            if (count == 5){
+                                return total + 1;
+                            }
+                        }
+                    }    
                 }
             }
-            for (int j = k; j < rankarray[count]; j++){//summing combination totals to get accurate ranks
-                sum = sum + Tools.choose(Math.abs(j - 12), Math.abs(count - 4));
+        }
+    return -1;
+    }
+    
+    private static int highcard(BitSet bitarr){//Assess cards for best high cards. returns 1-1277
+        int sum;
+        int k = 0;
+        int bitnum = -1;
+        int rank;
+        int total = 0;
+        for (int i = 0; i < bitarr.cardinality(); i++){
+            bitnum = bitarr.nextSetBit(bitnum + 1);
+            sum = 0;
+            rank = (bitnum - bitnum % 4)/4;//record value of each high card
+            if (i == 0){
+                total = total - rank;//removing straights from the final number means we need to reduce the score based on highest card. 
+                if (rank!= 0){//Aces have 2 instances where it will be the highest card, others have 1, so from A to K we have to add our extra straight
+                    total--;
+                }
             }
-            k = rankarray[count] + 1;
-            if (count == 0){rankarray[count] = sum -rankarray[count];}
-            rankarray[count] = sum;
-            count++;
-            if (count == 5){
-                return rankarray[0] + rankarray[1] + rankarray[2] + rankarray[3] + rankarray[4] - c;//return 1-1277
+            for (int j = k; j < rank; j++){//summing combination totals to get accurate ranks
+                sum = sum + Tools.choose(Math.abs(j - 12), Math.abs(i - 4));
+            }
+            k = rank + 1;
+            total = total + sum;
+            if (i == 4){
+                return total;//return 1-1277
             }
         }
         return -1;

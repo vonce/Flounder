@@ -13,7 +13,7 @@ import java.util.Arrays;
  */
 public class Calculate {
     static BitSet h = new BitSet(52);
-    static double[] rankings = new double[8];
+    static float[] rankings = new float[9];
     static int r = 0;
     static String[] strarr;
     
@@ -94,7 +94,7 @@ public class Calculate {
             h.clear();
             h.or(handcombos.combinations());
             h.or(board);
-            if (Handranker.handrank(Tools.add(hand, board)) <= Handranker.handrank(h)){
+            if (Handranker.handrank(Tools.add(hand, board)) < Handranker.handrank(h)){
                 percentile++;
             }
         }
@@ -102,7 +102,7 @@ public class Calculate {
         return percentile;
     }
     
-    public static float boardtexture(String[] board){
+    public static double boardtexture(String[] board){
         BitSet bsboard = new BitSet(52);
         bsboard.or(Tools.cardtobit(board));
         return boardtexture(bsboard);
@@ -112,29 +112,68 @@ public class Calculate {
         BitSet runout = new BitSet(52);
         float texture = 0;
         float avgtexture = 0;
-        float k;
+        float k = 0;
+        float l;
         b.or(board);
         Combinator handcombos = new Combinator(2, b);
         for (int i = 0; i < handcombos.alliter; i++){
+            texture = 0;
             b.clear();
-            b.or(handcombos.combinations());
             b.or(board);
+            b.or(handcombos.combinations());
             Combinator boardcombos = new Combinator(5 - Tools.bittocard(board).length, b);
-            b.andNot(board); 
             for (int j = 0; j < boardcombos.alliter; j++){
                 runout.clear();
-                runout.or(board);
+                runout.or(b);
                 runout.or(boardcombos.combinations());
-                k = handpercentile(b, board) - handpercentile(b, runout);
-                texture = texture + k * k;
+                texture = texture + (float) Math.pow(Handranker.handrank(b) - Handranker.handrank(runout), 2);
             }
-            avgtexture = avgtexture + (float) Math.sqrt(texture);
+            avgtexture = avgtexture + (float) Math.sqrt(texture)/boardcombos.alliter;
         }
-        avgtexture = avgtexture/handcombos.alliter;
+        avgtexture = avgtexture/(handcombos.alliter);
         return avgtexture;
     }
     
-    public static double[] rankpercentile(BitSet hand, BitSet board){
+    public static float[] rankpercentile(String[] hand, String[] board){
+        BitSet bshand = new BitSet(52);
+        BitSet bsboard = new BitSet(52);
+        bshand.or(Tools.cardtobit(hand));
+        bsboard.or(Tools.cardtobit(board));
+        return rankpercentile(bshand, bsboard);
+    } 
+    public static float[] rankpercentile(BitSet hand, BitSet board){
+        h.clear();
+        h.or(hand);
+        h.or(board);
+        Combinator handcombos = new Combinator(2, h);
+        for (int i = 0; i < handcombos.alliter; i++){
+            h.clear();
+            h.or(handcombos.combinations());
+            h.or(board);
+            if (Handranker.handrank(h) < 10){rankings[8]++;}
+            else if (Handranker.handrank(h) < 166){rankings[7]++;}
+            else if (Handranker.handrank(h) < 322){rankings[6]++;}  
+            else if (Handranker.handrank(h) < 1599){rankings[5]++;}
+            else if (Handranker.handrank(h) < 1609){rankings[4]++;}
+            else if (Handranker.handrank(h) < 2467){rankings[3]++;}
+            else if (Handranker.handrank(h) < 3325){rankings[2]++;}
+            else if (Handranker.handrank(h) < 6185){rankings[1]++;}
+            else {rankings[0]++;}
+        }
+        for (int i = 0; i < rankings.length; i++){
+            if (i > 0){
+                rankings[i] = rankings[i]/handcombos.alliter + rankings[i - 1];
+            }
+            else{
+                rankings[i] = rankings[i]/handcombos.alliter;
+            }
+        }
+        for (int i = 0; i < rankings.length; i++){
+            rankings[i] = (float) Math.pow(rankings[i], 2);
+        }
+        for (float i: rankings){
+            System.out.print(i + " ");
+        }
         return rankings;
     }
 }
