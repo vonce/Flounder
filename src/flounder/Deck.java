@@ -11,10 +11,7 @@ import java.util.HashMap;
  * @author Vince
  */
 public class Deck {
-    static HashMap<String, Integer> cardtoint = new HashMap<>();
-    static HashMap<Integer, String> inttocard = new HashMap<>();
-    static String[] deck = new String[52];
-    public static void main(){//Iterates through all values and suits and creates an array with 52 cards
+    Deck(){
         char suitchar = 'c';
         char valchar = '2';
         int i = 0;
@@ -38,8 +35,11 @@ public class Deck {
                 deck[i] = new String(card);
                 cardtoint.put(deck[i], i);//puts values for hashmap for strings and index int values
                 inttocard.put(i, deck[i]);//reversed of above
-                i++;  
-            }    
+                i++; 
+            }
         }
-    }
+    }  
+    static HashMap<String, Integer> cardtoint = new HashMap<>();
+    static HashMap<Integer, String> inttocard = new HashMap<>();
+    static String[] deck = new String[52];
 }

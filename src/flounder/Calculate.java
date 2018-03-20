@@ -17,7 +17,11 @@ public class Calculate {
     static int r = 0;
     static String[] strarr;
     
-    public static float[][] equity(String[] board, String[] ... hands){
+    public static int test(String[] s){
+        return h.cardinality();
+    }
+    
+    public static float[][] equity(String[] board, String[][] hands){
         BitSet bsboard = new BitSet(52);
         BitSet[] bshand = new BitSet[hands.length];
         for (int i = 0; i < hands.length; i++){
@@ -105,7 +109,7 @@ public class Calculate {
     public static double boardtexture(String[] board){
         BitSet bsboard = new BitSet(52);
         bsboard.or(Tools.cardtobit(board));
-        return boardtexture(bsboard);
+        return bsboard.cardinality();
     }
     public static float boardtexture(BitSet board){
         BitSet b = new BitSet(52);

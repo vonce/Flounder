@@ -6,9 +6,6 @@
 package flounder;
 
 import java.util.BitSet;
-import java.io.*;
-import java.util.Arrays;
-
 /**
  *
  * @author Vince
