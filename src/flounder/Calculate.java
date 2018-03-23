@@ -12,14 +12,14 @@ import java.util.Arrays;
  * @author Vince
  */
 public class Calculate {
+    static Handranker hr = new Handranker();
     static BitSet h = new BitSet(52);
     static float[] rankings = new float[9];
     static int r = 0;
     static String[] strarr;
-    
-    public static int test(String[] s){
-        return h.cardinality();
-    }
+    static int sum = 0;
+    static int rank = 0;
+    static int count = 0;
     
     public static float[][] equity(String[] board, String[][] hands){
         BitSet bsboard = new BitSet(52);
@@ -51,7 +51,7 @@ public class Calculate {
             h.or(board);
             for (int j = 0; j < hands.length; j++){
                 h.or(hands[j]);
-                rankarr[j] = Handranker.handrank(h);
+                rankarr[j] = hr.handranklookup7(h);
                 h.andNot(hands[j]);
             }
             for (int j = 0; j < hands.length; j++){
