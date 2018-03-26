@@ -19,8 +19,9 @@ public class Flounder {
         System.out.println("Hello, World!");
         // TODO code application logic here
         Calculate calc = new Calculate();
+        
         //int[] array = new int[7463];
-        String[] c = {};
+        String[] c = {"3s","Ad","4h"};
         String[] f = {"7h","6h"};
         String[] g = {"7s","8s"};
         //String[] h = {"Ah","3s"};
@@ -32,7 +33,8 @@ public class Flounder {
         //String[] n = {"6s","5s"};
         //String[] o = {"6c","5c"};
         String[][] allhands = {f, g};
-        Combinator combo = new Combinator(7);
+        //Combinator combo = new Combinator(7);
+        System.out.println("boardtexture: " + calc.boardtexture(c));
         BitSet h = new BitSet(52);
         Handranker hr = new Handranker();
         /*for (int i = 0; i < combo.alliter; i++){//test for lookup table
@@ -50,13 +52,13 @@ public class Flounder {
         //System.out.println(Calculate.rankpercentile(g, c));
         //System.out.println(Calculate.handpercentile(g, c));
         //System.out.println(Calculate.boardtexture(c));
-        float[][] array = calc.equity(c, allhands);
-        for (float[] i: array){
-            for (float j: i){
-                System.out.print(j + " ");
-            }
-            System.out.println(" ");
-        }
+        //float[][] array = calc.equity(c, allhands);
+        //for (float[] i: array){
+        //    for (float j: i){
+        //        System.out.print(j + " ");
+        //    }
+        //    System.out.println(" ");
+        //}
         //System.out.println(" ");
         //array = Calculate.equity(c, q, r);
 

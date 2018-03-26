@@ -109,16 +109,15 @@ public class Calculate {
     public static double boardtexture(String[] board){
         BitSet bsboard = new BitSet(52);
         bsboard.or(Tools.cardtobit(board));
-        return bsboard.cardinality();
+        return boardtexture(bsboard);
     }
     public static float boardtexture(BitSet board){
         BitSet b = new BitSet(52);
         BitSet runout = new BitSet(52);
         float texture = 0;
         float avgtexture = 0;
-        float k = 0;
-        float l;
         b.or(board);
+        System.out.println(b);
         Combinator handcombos = new Combinator(2, b);
         for (int i = 0; i < handcombos.alliter; i++){
             texture = 0;
@@ -126,11 +125,13 @@ public class Calculate {
             b.or(board);
             b.or(handcombos.combinations());
             Combinator boardcombos = new Combinator(5 - Tools.bittocard(board).length, b);
+            b.andNot(board);
+            System.out.println("b: " + b);
             for (int j = 0; j < boardcombos.alliter; j++){
                 runout.clear();
-                runout.or(b);
                 runout.or(boardcombos.combinations());
-                texture = texture + (float) Math.pow(Handranker.handrank(b) - Handranker.handrank(runout), 2);
+                //System.out.println("runout: " + runout);
+                texture = texture + (float) Math.pow(handpercentile(b, board) - handpercentile(runout, board), 2);
             }
             avgtexture = avgtexture + (float) Math.sqrt(texture)/boardcombos.alliter;
         }
