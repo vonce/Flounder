@@ -23,26 +23,60 @@ import java.util.logging.Logger;
 public class Handranker {
     Handranker(){
         try{
-            File toRead=new File("rankhash");
+            File toRead=new File("tables/rankhash5");
             FileInputStream fis=new FileInputStream(toRead);
             ObjectInputStream ois=new ObjectInputStream(fis);
-            rankhash =(HashMap<Integer,Integer>)ois.readObject();
+            rankhash5 =(HashMap<Integer,Integer>)ois.readObject();
             ois.close();
             fis.close();
-            //System.out.println(rankhash);
         }catch(Exception e){}
         try{
-            File toRead=new File("flushhash");
+            File toRead=new File("tables/flushhash5");
             FileInputStream fis=new FileInputStream(toRead);
             ObjectInputStream ois=new ObjectInputStream(fis);
-            flushhash =(HashMap<Integer,Integer>)ois.readObject();
+            flushhash5 =(HashMap<Integer,Integer>)ois.readObject();
             ois.close();
             fis.close();
-            //System.out.println(rankhash);
+        }catch(Exception e){}
+        try{
+            File toRead=new File("tables/rankhash6");
+            FileInputStream fis=new FileInputStream(toRead);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            rankhash6 =(HashMap<Integer,Integer>)ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(Exception e){}
+        try{
+            File toRead=new File("tables/flushhash6");
+            FileInputStream fis=new FileInputStream(toRead);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            flushhash6 =(HashMap<Integer,Integer>)ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(Exception e){}
+        try{
+            File toRead=new File("tables/rankhash7");
+            FileInputStream fis=new FileInputStream(toRead);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            rankhash7 =(HashMap<Integer,Integer>)ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(Exception e){}
+        try{
+            File toRead=new File("tables/flushhash7");
+            FileInputStream fis=new FileInputStream(toRead);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            flushhash7 =(HashMap<Integer,Integer>)ois.readObject();
+            ois.close();
+            fis.close();
         }catch(Exception e){}
     }
-    static HashMap<Integer, Integer> rankhash = new HashMap<>();
-    static HashMap<Integer, Integer> flushhash = new HashMap<>();
+    static HashMap<Integer, Integer> rankhash5 = new HashMap<>();
+    static HashMap<Integer, Integer> flushhash5 = new HashMap<>();
+    static HashMap<Integer, Integer> rankhash6 = new HashMap<>();
+    static HashMap<Integer, Integer> flushhash6 = new HashMap<>();
+    static HashMap<Integer, Integer> rankhash7 = new HashMap<>();
+    static HashMap<Integer, Integer> flushhash7 = new HashMap<>();
     static BitSet h = new BitSet(52);
     static int[] cardvalues = new int[7];
     static int[] rankarray = new int[5];
@@ -51,13 +85,13 @@ public class Handranker {
     static int rank;
     static int[] suit = new int[4];
     
-    static void generatehash() throws FileNotFoundException, IOException{
-        Combinator combo = new Combinator(7);
+    static void generatehash(int cardnumber) throws FileNotFoundException, IOException{
+        Combinator combo = new Combinator(cardnumber);
         for (int i = 0; i < combo.alliter; i++){
             int sum = 0;
             int rank = 0;
             int count = -1;
-            int[] suitcount = new int [7];
+            int[] suitcount = new int [cardnumber];
             h.clear();
             //BitSet b = new BitSet(52);
             h.or(combo.combinations());
@@ -103,15 +137,19 @@ public class Handranker {
                         if (j == 6){sum = sum + 33 * 113088217;}
                     }   
                 }
-                flushhash.put(sum, rank);
+                if (cardnumber == 5){flushhash5.put(sum, rank);}
+                if (cardnumber == 6){flushhash6.put(sum, rank);}
+                if (cardnumber == 7){flushhash7.put(sum, rank);}
             }
             else{
-                rankhash.put(sum, rank);
+                if (cardnumber == 5){rankhash5.put(sum, rank);}
+                if (cardnumber == 6){rankhash6.put(sum, rank);}
+                if (cardnumber == 7){rankhash7.put(sum, rank);}
             }
         }
         System.out.println("done loading");
 
-        File file = new File("rankhash");
+        File file = new File("rankhash" + cardnumber);
         FileOutputStream f = new FileOutputStream(file);
         ObjectOutputStream s = null;
         try {
@@ -119,10 +157,11 @@ public class Handranker {
         } catch (IOException ex) {
             Logger.getLogger(Handranker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        s.writeObject(rankhash);
+        if (cardnumber == 5){s.writeObject(rankhash5);}
+        if (cardnumber == 6){s.writeObject(rankhash6);}
+        if (cardnumber == 7){s.writeObject(rankhash7);}
         
-        
-        File file2 = new File("flushhash");
+        File file2 = new File("flushhash" + cardnumber);
         FileOutputStream f2 = new FileOutputStream(file2);
         ObjectOutputStream s2 = null;
         try {
@@ -130,7 +169,9 @@ public class Handranker {
         } catch (IOException ex) {
             Logger.getLogger(Handranker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        s2.writeObject(flushhash);
+        if (cardnumber == 5){s2.writeObject(flushhash5);}
+        if (cardnumber == 6){s2.writeObject(flushhash6);}
+        if (cardnumber == 7){s2.writeObject(flushhash7);}
         s2.flush();
         s2.close();
         f2.close();
@@ -139,21 +180,25 @@ public class Handranker {
         f.close();
         
         try{
-            File toRead=new File("rankhash");
+            File toRead=new File("rankhash" + cardnumber);
         FileInputStream fis=new FileInputStream(toRead);
         ObjectInputStream ois=new ObjectInputStream(fis);
 
-        HashMap<Integer,Integer> rankhash=(HashMap<Integer,Integer>)ois.readObject();
-
+        if (cardnumber == 5){HashMap<Integer,Integer> rankhash5=(HashMap<Integer,Integer>)ois.readObject();}
+        if (cardnumber == 6){HashMap<Integer,Integer> rankhash6=(HashMap<Integer,Integer>)ois.readObject();}
+        if (cardnumber == 7){HashMap<Integer,Integer> rankhash7=(HashMap<Integer,Integer>)ois.readObject();}
+        
         ois.close();
         fis.close();
     }catch(Exception e){}
                 try{
-            File toRead=new File("flushhash");
+            File toRead=new File("flushhash" + cardnumber);
         FileInputStream fis=new FileInputStream(toRead);
         ObjectInputStream ois=new ObjectInputStream(fis);
 
-        HashMap<Integer,Integer> flushhash=(HashMap<Integer,Integer>)ois.readObject();
+        if (cardnumber == 5){HashMap<Integer,Integer> flushhash5=(HashMap<Integer,Integer>)ois.readObject();}
+        if (cardnumber == 6){HashMap<Integer,Integer> flushhash6=(HashMap<Integer,Integer>)ois.readObject();}
+        if (cardnumber == 7){HashMap<Integer,Integer> flushhash7=(HashMap<Integer,Integer>)ois.readObject();}
 
         ois.close();
         fis.close();
@@ -177,11 +222,11 @@ public class Handranker {
         return 0;
     }
     
-    public static int handranklookup7(BitSet hand){//used for large iterative calculations 7 card hand, uses lookup table. only used with initialized handeranker class
+    public static int handranklookup(BitSet hand){//used for large iterative calculations, uses lookup tables. only used with initialized handeranker class
         rank = 0;
         sum = 0;
         count = -1;
-        int[] suitcount = new int[7];
+        int[] suitcount = new int[hand.cardinality()];
         int[] suit = new int[4];
         for (int i = 0; i < hand.cardinality(); i++){
             count = hand.nextSetBit(count + 1);
@@ -223,7 +268,9 @@ public class Handranker {
                     }   
                 }
                 try{
-                    return flushhash.get(sum);
+                    if (hand.cardinality() == 5){return flushhash5.get(sum);}
+                    if (hand.cardinality() == 6){return flushhash6.get(sum);}
+                    if (hand.cardinality() == 7){return flushhash7.get(sum);}
                 }catch(Exception e){}
             }
         }
@@ -232,8 +279,10 @@ public class Handranker {
         //}
         //System.out.println(hand);
         //System.out.println("SUM2: " + sum);
-        return rankhash.get(sum);
-        
+        if (hand.cardinality() == 5){return rankhash5.get(sum);}
+        if (hand.cardinality() == 6){return rankhash6.get(sum);}
+        if (hand.cardinality() == 7){return rankhash7.get(sum);}
+        return 4;
         //return Handranker.handrank(hand);
     }
     

@@ -15,13 +15,15 @@ import java.util.BitSet;
  */
 public class Flounder {
     public static void main(String[] args) throws IOException {
-        //Handranker.generatehash();
+        //Handranker.generatehash(5);
+        //Handranker.generatehash(6);
+        //Handranker.generatehash(7);
         System.out.println("Hello, World!");
         // TODO code application logic here
         Calculate calc = new Calculate();
         
         //int[] array = new int[7463];
-        String[] c = {"3s","Ad","4h"};
+        String[] c = {"3s","2s","Kh"};
         String[] f = {"7h","6h"};
         String[] g = {"7s","8s"};
         //String[] h = {"Ah","3s"};

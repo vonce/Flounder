@@ -51,7 +51,7 @@ public class Calculate {
             h.or(board);
             for (int j = 0; j < hands.length; j++){
                 h.or(hands[j]);
-                rankarr[j] = hr.handranklookup7(h);
+                rankarr[j] = hr.handranklookup(h);
                 h.andNot(hands[j]);
             }
             for (int j = 0; j < hands.length; j++){
@@ -93,12 +93,13 @@ public class Calculate {
         h.or(hand);
         h.or(board);
         float percentile = 0;
+        int handrank = hr.handranklookup(Tools.add(hand, board));
         Combinator handcombos = new Combinator(2, h);
         for (int i = 0; i < handcombos.alliter; i++){
             h.clear();
             h.or(handcombos.combinations());
             h.or(board);
-            if (Handranker.handrank(Tools.add(hand, board)) < Handranker.handrank(h)){
+            if (handrank < hr.handranklookup(h)){
                 percentile++;
             }
         }
@@ -124,14 +125,16 @@ public class Calculate {
             b.clear();
             b.or(board);
             b.or(handcombos.combinations());
-            Combinator boardcombos = new Combinator(5 - Tools.bittocard(board).length, b);
+            Combinator boardcombos = new Combinator(1, b);
             b.andNot(board);
-            System.out.println("b: " + b);
+            //System.out.println("b: " + b);
+            float handperc = handpercentile(b, board);
             for (int j = 0; j < boardcombos.alliter; j++){
                 runout.clear();
                 runout.or(boardcombos.combinations());
+                runout.or(board);
                 //System.out.println("runout: " + runout);
-                texture = texture + (float) Math.pow(handpercentile(b, board) - handpercentile(runout, board), 2);
+                texture = texture + (float) Math.pow(handperc - handpercentile(b, runout), 2);
             }
             avgtexture = avgtexture + (float) Math.sqrt(texture)/boardcombos.alliter;
         }
@@ -147,6 +150,7 @@ public class Calculate {
         return rankpercentile(bshand, bsboard);
     } 
     public static float[] rankpercentile(BitSet hand, BitSet board){
+        int rank;
         h.clear();
         h.or(hand);
         h.or(board);
@@ -155,14 +159,15 @@ public class Calculate {
             h.clear();
             h.or(handcombos.combinations());
             h.or(board);
-            if (Handranker.handrank(h) < 10){rankings[8]++;}
-            else if (Handranker.handrank(h) < 166){rankings[7]++;}
-            else if (Handranker.handrank(h) < 322){rankings[6]++;}  
-            else if (Handranker.handrank(h) < 1599){rankings[5]++;}
-            else if (Handranker.handrank(h) < 1609){rankings[4]++;}
-            else if (Handranker.handrank(h) < 2467){rankings[3]++;}
-            else if (Handranker.handrank(h) < 3325){rankings[2]++;}
-            else if (Handranker.handrank(h) < 6185){rankings[1]++;}
+            rank = hr.handranklookup(h);
+            if (rank < 10){rankings[8]++;}
+            else if (rank < 166){rankings[7]++;}
+            else if (rank < 322){rankings[6]++;}  
+            else if (rank < 1599){rankings[5]++;}
+            else if (rank < 1609){rankings[4]++;}
+            else if (rank < 2467){rankings[3]++;}
+            else if (rank < 3325){rankings[2]++;}
+            else if (rank < 6185){rankings[1]++;}
             else {rankings[0]++;}
         }
         for (int i = 0; i < rankings.length; i++){
