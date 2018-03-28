@@ -15,29 +15,34 @@ import java.util.BitSet;
  */
 public class Flounder {
     public static void main(String[] args) throws IOException {
-        //Handranker.generatehash(5);
-        //Handranker.generatehash(6);
-        //Handranker.generatehash(7);
+        //GenerateHash.generatehashhandrank(5);
+        //GenerateHash.generatehashhandrank(6);
+        //GenerateHash.generatehashhandrank(7);
+        //GenerateHash.generatehashboardtexture(3);
+        //GenerateHash.generatehashboardtexture(4);
+        
         System.out.println("Hello, World!");
         // TODO code application logic here
         Calculate calc = new Calculate();
         
         //int[] array = new int[7463];
-        String[] c = {"3s","2s","Kh"};
+        String[] c = {};
         String[] f = {"7h","6h"};
         String[] g = {"7s","8s"};
         //String[] h = {"Ah","3s"};
-        //String[] z = {"Qc","Jc"};
+        String[] z = {"Qc","Jc"};
         //String[] x = {"3h","6h"};
         //String[] k = {"3c","6c"};
         //String[] l = {"8s","7s"};
         //String[] m = {"8c","7c"};
         //String[] n = {"6s","5s"};
         //String[] o = {"6c","5c"};
-        String[][] allhands = {f, g};
+        String[][] allhands = {f, g, z};
         //Combinator combo = new Combinator(7);
-        System.out.println("boardtexture: " + calc.boardtexture(c));
-        BitSet h = new BitSet(52);
+        //System.out.println("boardtexture: " + calc.boardtexture(c));
+        //System.out.println("boardtexture: " + calc.boardtexture(c));
+        //System.out.println("boardtexture: " + calc.boardtexture(c));
+        //BitSet h = new BitSet(52);
         Handranker hr = new Handranker();
         /*for (int i = 0; i < combo.alliter; i++){//test for lookup table
             h = combo.combinations();
@@ -54,13 +59,21 @@ public class Flounder {
         //System.out.println(Calculate.rankpercentile(g, c));
         //System.out.println(Calculate.handpercentile(g, c));
         //System.out.println(Calculate.boardtexture(c));
-        //float[][] array = calc.equity(c, allhands);
-        //for (float[] i: array){
-        //    for (float j: i){
-        //        System.out.print(j + " ");
-        //    }
-        //    System.out.println(" ");
-        //}
+        float[][] array = calc.equity(c, allhands);
+        for (float[] i: array){
+            for (float j: i){
+                System.out.print(j + " ");
+            }
+            System.out.println(" ");
+        }
+        array = calc.equity(c, allhands);
+        System.out.println("aaaaaln");
+        array = calc.equity(c, allhands);
+        System.out.println("aaaaaln");
+        array = calc.equity(c, allhands);
+        System.out.println("aaaaaln");
+        array = calc.equity(c, allhands);
+        System.out.println("aaaaaln");
         //System.out.println(" ");
         //array = Calculate.equity(c, q, r);
 
