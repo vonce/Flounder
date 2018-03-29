@@ -93,17 +93,75 @@ public class Calculate {
         h.or(hand);
         h.or(board);
         float percentile = 0;
-        int handrank = hr.handranklookup(Tools.add(hand, board));
+        int handrank = hr.handranklookup(h);
         Combinator handcombos = new Combinator(2, h);
         for (int i = 0; i < handcombos.alliter; i++){
             h.clear();
             h.or(handcombos.combinations());
             h.or(board);
-            if (handrank < hr.handranklookup(h)){
+            if (handrank <= hr.handranklookup(h)){
                 percentile++;
             }
         }
         percentile = percentile/handcombos.alliter;
+        return percentile;
+    }
+    
+    public static float effectivepercentile(String[] hand, String[] board){
+        BitSet bshand = new BitSet(52);
+        BitSet bsboard = new BitSet(52);
+        bshand.or(Tools.cardtobit(hand));
+        bsboard.or(Tools.cardtobit(board));
+        return effectivepercentile(bshand, bsboard);
+    } 
+    public static float effectivepercentile(BitSet hand, BitSet board){//https://en.wikipedia.org/wiki/Poker_Effective_Hand_Strength_(EHS)_algorithm
+        h.clear();
+        h.or(hand);
+        h.or(board);
+        BitSet hcombo = new BitSet(52);
+        boolean win;
+        float percentile = 0;
+        float negpotential = 0;
+        float pospotential = 0;
+        int handrank = hr.handranklookup(h);
+        int runouthandrank;
+        Combinator handcombos = new Combinator(2, h);
+        for (int i = 0; i < handcombos.alliter; i++){
+            hcombo.clear();
+            hcombo.or(handcombos.combinations());
+            h.clear();
+            h.or(board);
+            h.or(hcombo);
+            if (handrank <= hr.handranklookup(h)){
+                percentile++;
+                win = true;
+            }
+            else{
+                win = false;
+            }
+            h.or(hand);
+            Combinator boardcombos = new Combinator(5 - board.cardinality(), h);
+            count = boardcombos.alliter;
+            for (int j = 0; j < boardcombos.alliter; j++){
+                h.clear();
+                h.or(hand);
+                h.or(board);
+                h.or(boardcombos.combinations());
+                runouthandrank = hr.handranklookup(h);
+                h.andNot(hand);
+                h.or(hcombo);
+                if ((runouthandrank <= hr.handranklookup(h)) & (win == false)){
+                    pospotential++;
+                }
+                if ((runouthandrank > hr.handranklookup(h)) & (win == true)){
+                    negpotential++;
+                }
+            }
+        }
+        percentile = percentile/handcombos.alliter;
+        negpotential = negpotential/(handcombos.alliter * count);
+        pospotential = pospotential/(handcombos.alliter * count);
+        percentile = percentile * (1 - negpotential) + (1 - percentile) * pospotential;
         return percentile;
     }
     

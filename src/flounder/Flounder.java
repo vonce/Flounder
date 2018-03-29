@@ -26,9 +26,8 @@ public class Flounder {
         Calculate calc = new Calculate();
         
         //int[] array = new int[7463];
-        String[] c = {};
-        String[] f = {"7h","6h"};
-        String[] g = {"7s","8s"};
+        String[] c = {"2h","4h","5h","Ah","9d"};
+        String[] g = {"Kd","Kh"};
         //String[] h = {"Ah","3s"};
         String[] z = {"Qc","Jc"};
         //String[] x = {"3h","6h"};
@@ -37,7 +36,7 @@ public class Flounder {
         //String[] m = {"8c","7c"};
         //String[] n = {"6s","5s"};
         //String[] o = {"6c","5c"};
-        String[][] allhands = {f, g, z};
+        //String[][] allhands = {x, g, z};
         //Combinator combo = new Combinator(7);
         //System.out.println("boardtexture: " + calc.boardtexture(c));
         //System.out.println("boardtexture: " + calc.boardtexture(c));
@@ -56,24 +55,16 @@ public class Flounder {
         //for (int i: array){
         //    System.out.println(i);
         //}
-        //System.out.println(Calculate.rankpercentile(g, c));
-        //System.out.println(Calculate.handpercentile(g, c));
+        System.out.println(Calculate.effectivepercentile(g, c));
+        System.out.println(Calculate.handpercentile(g, c));
         //System.out.println(Calculate.boardtexture(c));
-        float[][] array = calc.equity(c, allhands);
-        for (float[] i: array){
-            for (float j: i){
-                System.out.print(j + " ");
-            }
-            System.out.println(" ");
-        }
-        array = calc.equity(c, allhands);
-        System.out.println("aaaaaln");
-        array = calc.equity(c, allhands);
-        System.out.println("aaaaaln");
-        array = calc.equity(c, allhands);
-        System.out.println("aaaaaln");
-        array = calc.equity(c, allhands);
-        System.out.println("aaaaaln");
+        //float[][] array = calc.equity(c, allhands);
+        //for (float[] i: array){
+        //    for (float j: i){
+        //        System.out.print(j + " ");
+        //    }
+        //    System.out.println(" ");
+        //}
         //System.out.println(" ");
         //array = Calculate.equity(c, q, r);
 
