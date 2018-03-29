@@ -18,16 +18,16 @@ public class Flounder {
         //GenerateHash.generatehashhandrank(5);
         //GenerateHash.generatehashhandrank(6);
         //GenerateHash.generatehashhandrank(7);
-        //GenerateHash.generatehashboardtexture(3);
-        //GenerateHash.generatehashboardtexture(4);
+        GenerateHash.generatehashboardtexture(3);
+        GenerateHash.generatehashboardtexture(4);
         
         System.out.println("Hello, World!");
         // TODO code application logic here
         Calculate calc = new Calculate();
         
         //int[] array = new int[7463];
-        String[] c = {"2h","4h","5h","Ah","9d"};
-        String[] g = {"Kd","Kh"};
+        String[] c = {"Jh","Th","9h","2c"};
+        String[] g = {"3d","2h","Kc","Ad"};
         //String[] h = {"Ah","3s"};
         String[] z = {"Qc","Jc"};
         //String[] x = {"3h","6h"};
@@ -38,7 +38,10 @@ public class Flounder {
         //String[] o = {"6c","5c"};
         //String[][] allhands = {x, g, z};
         //Combinator combo = new Combinator(7);
+        System.out.println("boardtexture: " + calc.boardtexture2(c));
         //System.out.println("boardtexture: " + calc.boardtexture(c));
+        System.out.println("boardtexture: " + calc.boardtexture2(g));
+        //System.out.println("boardtexture: " + calc.boardtexture(g));
         //System.out.println("boardtexture: " + calc.boardtexture(c));
         //System.out.println("boardtexture: " + calc.boardtexture(c));
         //BitSet h = new BitSet(52);
@@ -55,8 +58,8 @@ public class Flounder {
         //for (int i: array){
         //    System.out.println(i);
         //}
-        System.out.println(Calculate.effectivepercentile(g, c));
-        System.out.println(Calculate.handpercentile(g, c));
+        //System.out.println(Calculate.effectivepercentile(g, c));
+        //System.out.println(Calculate.handpercentile(g, c));
         //System.out.println(Calculate.boardtexture(c));
         //float[][] array = calc.equity(c, allhands);
         //for (float[] i: array){

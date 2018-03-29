@@ -165,7 +165,29 @@ public class Calculate {
         return percentile;
     }
     
-    public static double boardtexture(String[] board){
+    public static double boardtexture2(String[] board){
+        BitSet bsboard = new BitSet(52);
+        bsboard.or(Tools.cardtobit(board));
+        return boardtexture2(bsboard);
+    }
+    public static float boardtexture2(BitSet board){
+        BitSet b = new BitSet(52);
+        BitSet hcombo = new BitSet(52);
+        double texture = 0;
+        b.or(board);
+        Combinator handcombos = new Combinator(2, b);
+        for (int i = 0; i < handcombos.alliter; i++){
+            hcombo.clear();
+            hcombo.or(handcombos.combinations());
+            
+            texture = texture + Math.pow(handpercentile(hcombo, b) - effectivepercentile(hcombo, b), 2);
+        }
+        texture = Math.sqrt(texture);
+        texture = texture/(handcombos.alliter);
+        return (float) texture;
+    }
+    
+        public static double boardtexture(String[] board){
         BitSet bsboard = new BitSet(52);
         bsboard.or(Tools.cardtobit(board));
         return boardtexture(bsboard);
