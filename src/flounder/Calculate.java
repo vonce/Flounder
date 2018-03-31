@@ -7,6 +7,7 @@ package flounder;
 
 import java.util.BitSet;
 import java.util.Arrays;
+import java.util.HashMap;
 /**
  *
  * @author Vince
@@ -165,26 +166,42 @@ public class Calculate {
         return percentile;
     }
     
-    public static double boardtexture2(String[] board){
+    public static double boardtexturelookup(String[] board){
         BitSet bsboard = new BitSet(52);
         bsboard.or(Tools.cardtobit(board));
-        return boardtexture2(bsboard);
+        return boardtexturelookup(bsboard);
     }
-    public static float boardtexture2(BitSet board){
-        BitSet b = new BitSet(52);
-        BitSet hcombo = new BitSet(52);
-        double texture = 0;
-        b.or(board);
-        Combinator handcombos = new Combinator(2, b);
-        for (int i = 0; i < handcombos.alliter; i++){
-            hcombo.clear();
-            hcombo.or(handcombos.combinations());
-            
-            texture = texture + Math.pow(handpercentile(hcombo, b) - effectivepercentile(hcombo, b), 2);
+    public static float boardtexturelookup(BitSet board){
+        int sum = 0;
+        int rank = 0;
+        int count = -1;
+        int[] suitcount = new int [board.cardinality()];
+        for (int j = 0; j < board.cardinality(); j++){
+            count = board.nextSetBit(count + 1);
+            rank = count;
+            suitcount[j] = (rank % 4);
+            rank = ((rank - rank % 4)/4);
+            rank = Tools.numconv(rank);
+            sum = sum + rank;
         }
-        texture = Math.sqrt(texture);
-        texture = texture/(handcombos.alliter);
-        return (float) texture;
+        count = 0;
+        HashMap<Integer, Integer> suits = new HashMap<>();
+        for (int j = 0; j < suitcount.length; j++){
+            if (suits.containsKey(suitcount[j]) == false){
+                suits.put(suitcount[j], count);
+                count++;
+            }
+        }
+        for (int j = 0; j < suitcount.length; j++){
+            suitcount[j] = suits.get(suitcount[j]);
+            if (j == 0){sum = sum + suitcount[j] * 0 * 113088217;}
+            if (j == 1){sum = sum + suitcount[j] * 1 * 113088217;}
+            if (j == 2){sum = sum + suitcount[j] * 5 * 113088217;}
+            if (j == 3){sum = sum + suitcount[j] * 24 * 113088217;}
+        }
+        if (board.cardinality() == 3){return hr.boardtexturehash3.get(sum);}
+        if (board.cardinality() == 4){return hr.boardtexturehash4.get(sum);}
+        return 0;
     }
     
         public static double boardtexture(String[] board){

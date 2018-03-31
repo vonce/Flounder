@@ -6,7 +6,6 @@
 package flounder;
 
 import java.util.BitSet;
-import java.util.HashMap;
 
 /**
  *
@@ -87,5 +86,22 @@ public class Tools {
             h.or(i);
         }
         return h;
+    }
+    
+    public static int numconv(int value){
+        if (value == 0){return 0;}
+        if (value == 1){return 1;}
+        if (value == 2){return 5;}
+        if (value == 3){return 24;}
+        if (value == 4){return 112;}
+        if (value == 5){return 521;}
+        if (value == 6){return 2421;}
+        if (value == 7){return 11248;}
+        if (value == 8){return 52256;}
+        if (value == 9){return 242769;}
+        if (value == 10){return 1127845;}
+        if (value == 11){return 5239688;}
+        if (value == 12){return 24342288;}
+        return 0;
     }
 }

@@ -64,7 +64,25 @@ public class Handranker {
             ois.close();
             fis.close();
         }catch(Exception e){}
+        try{
+            File toRead=new File("tables/boardtexturehash3");
+            FileInputStream fis=new FileInputStream(toRead);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            boardtexturehash3 =(HashMap<Integer,Float>)ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(Exception e){}
+        try{
+            File toRead=new File("tables/boardtexturehash4");
+            FileInputStream fis=new FileInputStream(toRead);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            boardtexturehash4 =(HashMap<Integer,Float>)ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(Exception e){}
     }
+    static HashMap<Integer, Float> boardtexturehash3 = new HashMap<>();
+    static HashMap<Integer, Float> boardtexturehash4 = new HashMap<>();
     static HashMap<Integer, Integer> rankhash5 = new HashMap<>();
     static HashMap<Integer, Integer> flushhash5 = new HashMap<>();
     static HashMap<Integer, Integer> rankhash6 = new HashMap<>();
@@ -91,7 +109,7 @@ public class Handranker {
             suitcount[i] = rank % 4;
             suit[rank % 4]++;
             rank = ((rank - rank % 4)/4);
-            rank = GenerateHash.numconv(rank);
+            rank = Tools.numconv(rank);
             sum = sum + rank;
         }
         for (int i = 0; i < 4; i++){
@@ -139,7 +157,7 @@ public class Handranker {
         if (hand.cardinality() == 5){return rankhash5.get(sum);}
         if (hand.cardinality() == 6){return rankhash6.get(sum);}
         if (hand.cardinality() == 7){return rankhash7.get(sum);}
-        return 4;
+        return 0;
         //return Handranker.handrank(hand);
     }
     

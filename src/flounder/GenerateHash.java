@@ -6,6 +6,8 @@
 package flounder;
 
 import static flounder.Handranker.h;
+import java.util.BitSet;
+import java.util.TreeSet;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,9 +28,10 @@ public class GenerateHash {
     static HashMap<Integer, Integer> flushhash6 = new HashMap<>();
     static HashMap<Integer, Integer> rankhash7 = new HashMap<>();
     static HashMap<Integer, Integer> flushhash7 = new HashMap<>();
-    
     static HashMap<Integer, Float> boardtexturehash3 = new HashMap<>();
     static HashMap<Integer, Float> boardtexturehash4 = new HashMap<>();
+    static HashMap<TreeSet, Float> effectivehandpercentilehash3 = new HashMap<>();
+    static HashMap<TreeSet, Float> effectivehandpercentilehash4 = new HashMap<>();
     
     static void generatehashhandrank(int cardnumber) throws FileNotFoundException, IOException{
         Combinator combo = new Combinator(cardnumber);
@@ -48,7 +51,7 @@ public class GenerateHash {
                 rank = count;
                 suitcount[j] = (rank % 4);
                 rank = ((rank - rank % 4)/4);
-                rank = numconv(rank);
+                rank = Tools.numconv(rank);
                 sum = sum + rank;
             }
             
@@ -136,7 +139,7 @@ public class GenerateHash {
             h.clear();
             //BitSet b = new BitSet(52);
             h.or(combo.combinations());
-            if (i % 10 == 0){
+            if (i % 100 == 0){
                 System.out.println(i + " of " + combo.alliter);
             }
             for (int j = 0; j < h.cardinality(); j++){
@@ -144,7 +147,7 @@ public class GenerateHash {
                 rank = count;
                 suitcount[j] = (rank % 4);
                 rank = ((rank - rank % 4)/4);
-                rank = numconv(rank);
+                rank = Tools.numconv(rank);
                 sum = sum + rank;
             }
             count = 0;
@@ -193,20 +196,110 @@ public class GenerateHash {
         if (cardnumber == 4){s.writeObject(boardtexturehash4);}
     }
     
-    public static int numconv(int value){
-        if (value == 0){return 0;}
-        if (value == 1){return 1;}
-        if (value == 2){return 5;}
-        if (value == 3){return 24;}
-        if (value == 4){return 112;}
-        if (value == 5){return 521;}
-        if (value == 6){return 2421;}
-        if (value == 7){return 11248;}
-        if (value == 8){return 52256;}
-        if (value == 9){return 242769;}
-        if (value == 10){return 1127845;}
-        if (value == 11){return 5239688;}
-        if (value == 12){return 24342288;}
-        return 0;
+    static void generatehasheffectivehandpercentile(int cardnumber) throws FileNotFoundException, IOException{
+        Combinator boardcombo = new Combinator(cardnumber);
+        for (int i = 0; i < boardcombo.alliter; i++){
+            BitSet b = new BitSet(52);
+            float effperc = 0;
+            int sumh = 0;
+            int sumb = 0;
+            int rank = 0;
+            int count = -1;
+            int[] suitcount = new int[cardnumber + 2];
+            TreeSet handboardkey = new TreeSet();
+            b.clear();
+            //BitSet b = new BitSet(52);
+            b.or(boardcombo.combinations());
+            if (i % 1 == 0){
+                System.out.println(i + " of " + boardcombo.alliter);
+            }
+            for (int j = 0; j < b.cardinality(); j++){
+                count = b.nextSetBit(count + 1);
+                rank = count;
+                suitcount[j] = (rank % 4);
+                rank = ((rank - rank % 4)/4);
+                rank = Tools.numconv(rank);
+                sumb = sumb + rank;
+            }
+            Combinator handcombo = new Combinator(2, b);
+            for (int j = 0; j < handcombo.alliter; j++){
+                if (j % 100 == 0){
+                    System.out.println(j + " of " + handcombo.alliter);
+                }
+                h.clear();
+                h.or(handcombo.combinations());
+                for (int k = 0; k < h.cardinality(); k++){
+                    count = h.nextSetBit(count + 1);
+                    rank = count;
+                    suitcount[k+cardnumber] = (rank % 4);
+                    rank = ((rank - rank % 4)/4);
+                    rank = Tools.numconv(rank);
+                    sumh = sumh + rank;
+                }
+                count = 0;
+                HashMap<Integer, Integer> suits = new HashMap<>();
+                for (int k = 0; k < suitcount.length; k++){
+                    if (suits.containsKey(suitcount[k]) == false){
+                        suits.put(suitcount[k], count);
+                        count++;
+                    }
+                }
+                if (suits.size() < 4){
+                    count = suits.size();
+                    for (int k = 0; k < 4; k++){
+                        if (suits.containsKey(k) == false){
+                            suits.put(k, count);
+                            count++;
+                        }
+                    }
+                }
+                for (int k = 0; k < suitcount.length - 2; k++){
+                    suitcount[k] = suits.get(suitcount[k]);
+                    if (k == 0){sumb = sumb + suitcount[k] * 0 * 113088217;}
+                    if (k == 1){sumb = sumb + suitcount[k] * 1 * 113088217;}
+                    if (k == 2){sumb = sumb + suitcount[k] * 5 * 113088217;}
+                    if (k == 3){sumb = sumb + suitcount[k] * 24 * 113088217;}
+                }
+                for (int k = suitcount.length - 2; k < suitcount.length; k++){
+                    suitcount[k] = suits.get(suitcount[k]);
+                    if (k == suitcount.length - 2){sumh = sumh + suitcount[k] * 0 * 113088217;}
+                    if (k == suitcount.length - 1){sumh = sumh + suitcount[k] * 1 * 113088217;}
+                }
+                handboardkey.clear();
+                handboardkey.add(sumh);
+                handboardkey.add(sumb);
+                //System.out.println(handboardkey);
+                if (cardnumber == 3){
+                    if (effectivehandpercentilehash3.containsKey(handboardkey) == false){
+                        System.out.print(h);
+                        System.out.print(b + "\n");
+                        effperc = Calculate.effectivepercentile(h,b);
+                        effectivehandpercentilehash3.put(handboardkey, effperc);
+                    }
+                    else{
+                        System.out.println("SKIP");
+                    }
+                }
+                if (cardnumber == 4){
+                    if (effectivehandpercentilehash4.containsKey(handboardkey) == false){
+                        effperc = Calculate.effectivepercentile(h,b);
+                        effectivehandpercentilehash4.put(handboardkey, effperc);
+                    }
+                }
+            }
+        }
+
+        System.out.println("done loading");
+
+        File file = new File("effectivehandpercentilehash" + cardnumber);
+        FileOutputStream f = new FileOutputStream(file);
+        ObjectOutputStream s = null;
+        try {
+            s = new ObjectOutputStream(f);
+        } catch (IOException ex) {
+            Logger.getLogger(Handranker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (cardnumber == 3){s.writeObject(effectivehandpercentilehash3);}
+        if (cardnumber == 4){s.writeObject(effectivehandpercentilehash4);}
     }
 }
