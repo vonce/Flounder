@@ -26,12 +26,17 @@ public class Flounder {
         Calculate calc = new Calculate();
         
         //int[] array = new int[7463];
+<<<<<<< HEAD
         String[] c = {"Jh","Th","9h","2c"};
         String[] g = {"3d","2h","Kc","Ad"};
+=======
+        String[] c = {"2h","4h","5h","Ks"};
+        String[] g = {"Kd","Kh"};
+>>>>>>> 4ec35b21043ca138f1fd0ba15831e97a42aaeea0
         //String[] h = {"Ah","3s"};
         String[] z = {"Qc","Jc"};
-        //String[] x = {"3h","6h"};
-        //String[] k = {"3c","6c"};
+        String[] x = {"3h","6h"};
+        String[] k = {"3c","6c"};
         //String[] l = {"8s","7s"};
         //String[] m = {"8c","7c"};
         //String[] n = {"6s","5s"};
@@ -58,8 +63,21 @@ public class Flounder {
         //for (int i: array){
         //    System.out.println(i);
         //}
+<<<<<<< HEAD
         //System.out.println(Calculate.effectivepercentile(g, c));
         //System.out.println(Calculate.handpercentile(g, c));
+=======
+        for (int i = 0; i < 500; i++){
+        System.out.println(Calculate.effectivepercentile(g, c));
+        //System.out.println(Calculate.handpercentile(g, c));
+        System.out.println(Calculate.effectivepercentile(k, c));
+        //System.out.println(Calculate.handpercentile(k, c));
+        System.out.println(Calculate.effectivepercentile(x, c));
+        //System.out.println(Calculate.handpercentile(x, c));
+        System.out.println(Calculate.effectivepercentile(z, c));
+        //System.out.println(Calculate.handpercentile(z, c));
+        }
+>>>>>>> 4ec35b21043ca138f1fd0ba15831e97a42aaeea0
         //System.out.println(Calculate.boardtexture(c));
         //float[][] array = calc.equity(c, allhands);
         //for (float[] i: array){
