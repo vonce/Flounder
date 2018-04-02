@@ -20,8 +20,8 @@ public class Flounder {
         //GenerateHash.generatehashhandrank(7);
         //GenerateHash.generatehashboardtexture(3);
         //GenerateHash.generatehashboardtexture(4);
-        GenerateHash.generatehasheffectivehandpercentile(3);
-        GenerateHash.generatehasheffectivehandpercentile(4);
+        //GenerateHash.generatehasheffectivehandpercentile(3);
+        //GenerateHash.generatehasheffectivehandpercentile(4);
         
         System.out.println("Hello, World!");
         // TODO code application logic here
@@ -40,9 +40,11 @@ public class Flounder {
         //String[] o = {"6c","5c"};
         //String[][] allhands = {x, g, z};
         //Combinator combo = new Combinator(7);
-        System.out.println("boardtexture: " + calc.boardtexturelookup(c));
+        for (int i = 0; i < 1000; i++){
+        System.out.println("boardtexture: " + calc.effectivepercentile(z,c));
+        }
         //System.out.println("boardtexture: " + calc.boardtexture(c));
-        System.out.println("boardtexture: " + calc.boardtexturelookup(g));
+        //System.out.println("boardtexture: " + calc.boardtexturelookup(g));
         //System.out.println("boardtexture: " + calc.boardtexture(g));
         //System.out.println("boardtexture: " + calc.boardtexture(c));
         //System.out.println("boardtexture: " + calc.boardtexture(c));
