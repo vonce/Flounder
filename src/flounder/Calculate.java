@@ -172,7 +172,7 @@ public class Calculate {
         return boardtexturelookup(bsboard);
     }
     public static float boardtexturelookup(BitSet board){
-        int sum = 0;
+        long sum = 0L;
         int rank = 0;
         int count = -1;
         int[] suitcount = new int [board.cardinality()];
@@ -194,17 +194,17 @@ public class Calculate {
         }
         for (int j = 0; j < suitcount.length; j++){
             suitcount[j] = suits.get(suitcount[j]);
-            if (j == 0){sum = sum + suitcount[j] * 0 * 113088217;}
-            if (j == 1){sum = sum + suitcount[j] * 1 * 113088217;}
-            if (j == 2){sum = sum + suitcount[j] * 5 * 113088217;}
-            if (j == 3){sum = sum + suitcount[j] * 24 * 113088217;}
+            if (j == 0){sum = sum + suitcount[j] * 1 * 113088217L;}
+            if (j == 1){sum = sum + suitcount[j] * 4 * 113088217L;}
+            if (j == 2){sum = sum + suitcount[j] * 16 * 113088217L;}
+            if (j == 3){sum = sum + suitcount[j] * 64 * 113088217L;}
         }
         if (board.cardinality() == 3){return hr.boardtexturehash3.get(sum);}
         if (board.cardinality() == 4){return hr.boardtexturehash4.get(sum);}
         return 0;
     }
     
-        public static double boardtexture(String[] board){
+    public static double boardtexture(String[] board){
         BitSet bsboard = new BitSet(52);
         bsboard.or(Tools.cardtobit(board));
         return boardtexture(bsboard);

@@ -18,10 +18,10 @@ public class Flounder {
         //GenerateHash.generatehashhandrank(5);
         //GenerateHash.generatehashhandrank(6);
         //GenerateHash.generatehashhandrank(7);
-        //GenerateHash.generatehashboardtexture(3);
-        //GenerateHash.generatehashboardtexture(4);
-        //GenerateHash.generatehasheffectivehandpercentile(3);
-        //GenerateHash.generatehasheffectivehandpercentile(4);
+        GenerateHash.generatehasheffectivehandpercentile(3);
+        GenerateHash.generatehasheffectivehandpercentile(4);
+        GenerateHash.generatehashboardtexture(3);
+        GenerateHash.generatehashboardtexture(4);
         
         System.out.println("Hello, World!");
         // TODO code application logic here

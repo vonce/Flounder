@@ -28,10 +28,10 @@ public class GenerateHash {
     static HashMap<Integer, Integer> flushhash6 = new HashMap<>();
     static HashMap<Integer, Integer> rankhash7 = new HashMap<>();
     static HashMap<Integer, Integer> flushhash7 = new HashMap<>();
-    static HashMap<Integer, Float> boardtexturehash3 = new HashMap<>();
-    static HashMap<Integer, Float> boardtexturehash4 = new HashMap<>();
-    static HashMap<TreeSet, Float> effectivehandpercentilehash3 = new HashMap<>();
-    static HashMap<TreeSet, Float> effectivehandpercentilehash4 = new HashMap<>();
+    static HashMap<Long, Float> boardtexturehash3 = new HashMap<>();
+    static HashMap<Long, Float> boardtexturehash4 = new HashMap<>();
+    static HashMap<Long, Float> effectivehandpercentilehash3 = new HashMap<>();
+    static HashMap<Long, Float> effectivehandpercentilehash4 = new HashMap<>();
     
     static void generatehashhandrank(int cardnumber) throws FileNotFoundException, IOException{
         Combinator combo = new Combinator(cardnumber);
@@ -132,7 +132,7 @@ public class GenerateHash {
         Combinator combo = new Combinator(cardnumber);
         for (int i = 0; i < combo.alliter; i++){
             float boardtext = 0;
-            int sum = 0;
+            long sum = 0L;
             int rank = 0;
             int count = -1;
             int[] suitcount = new int [cardnumber];
@@ -160,10 +160,10 @@ public class GenerateHash {
             }
             for (int j = 0; j < suitcount.length; j++){
                 suitcount[j] = suits.get(suitcount[j]);
-                if (j == 0){sum = sum + suitcount[j] * 0 * 113088217;}
-                if (j == 1){sum = sum + suitcount[j] * 1 * 113088217;}
-                if (j == 2){sum = sum + suitcount[j] * 5 * 113088217;}
-                if (j == 3){sum = sum + suitcount[j] * 24 * 113088217;}
+                if (j == 0){sum = sum + suitcount[j] * 1 * 113088217L;}
+                if (j == 1){sum = sum + suitcount[j] * 4 * 113088217L;}
+                if (j == 2){sum = sum + suitcount[j] * 16 * 113088217L;}
+                if (j == 3){sum = sum + suitcount[j] * 64 * 113088217L;}
             }
             
             
@@ -201,8 +201,9 @@ public class GenerateHash {
         for (int i = 0; i < boardcombo.alliter; i++){
             BitSet b = new BitSet(52);
             float effperc = 0;
-            int sumh = 0;
-            int sumb = 0;
+            long sum = 0L;
+            long sumh = 0L;
+            long sumb = 0L;
             int rank = 0;
             int count = -1;
             int[] suitcount = new int[cardnumber + 2];
@@ -223,6 +224,7 @@ public class GenerateHash {
             }
             Combinator handcombo = new Combinator(2, b);
             for (int j = 0; j < handcombo.alliter; j++){
+                sumh = 0L;
                 if (j % 100 == 0){
                     System.out.println(j + " of " + handcombo.alliter);
                 }
@@ -234,7 +236,7 @@ public class GenerateHash {
                     suitcount[k+cardnumber] = (rank % 4);
                     rank = ((rank - rank % 4)/4);
                     rank = Tools.numconv(rank);
-                    sumh = sumh + rank;
+                    sumh = sumh + rank * 525379733;
                 }
                 count = 0;
                 HashMap<Integer, Integer> suits = new HashMap<>();
@@ -253,37 +255,35 @@ public class GenerateHash {
                         }
                     }
                 }
+                
                 for (int k = 0; k < suitcount.length - 2; k++){
                     suitcount[k] = suits.get(suitcount[k]);
-                    if (k == 0){sumb = sumb + suitcount[k] * 0 * 113088217;}
-                    if (k == 1){sumb = sumb + suitcount[k] * 1 * 113088217;}
-                    if (k == 2){sumb = sumb + suitcount[k] * 5 * 113088217;}
-                    if (k == 3){sumb = sumb + suitcount[k] * 24 * 113088217;}
+                    if (k == 0){sumb = sumb + suitcount[k] * 1 * 525379733L;}
+                    if (k == 1){sumb = sumb + suitcount[k] * 4 * 525379733L;}
+                    if (k == 2){sumb = sumb + suitcount[k] * 16 * 525379733L;}
+                    if (k == 3){sumb = sumb + suitcount[k] * 64 * 525379733L;}
                 }
                 for (int k = suitcount.length - 2; k < suitcount.length; k++){
                     suitcount[k] = suits.get(suitcount[k]);
-                    if (k == suitcount.length - 2){sumh = sumh + suitcount[k] * 0 * 113088217;}
-                    if (k == suitcount.length - 1){sumh = sumh + suitcount[k] * 1 * 113088217;}
+                    if (k == suitcount.length - 2){sumh = sumh + suitcount[k] * 256 * 525379733L;}
+                    if (k == suitcount.length - 1){sumh = sumh + suitcount[k] * 1023 * 525379733L;}
                 }
-                handboardkey.clear();
-                handboardkey.add(sumh);
-                handboardkey.add(sumb);
+                sum = sumh + sumb;
+                System.out.println(sum);
                 //System.out.println(handboardkey);
                 if (cardnumber == 3){
-                    if (effectivehandpercentilehash3.containsKey(handboardkey) == false){
-                        System.out.print(h);
-                        System.out.print(b + "\n");
+                    if (effectivehandpercentilehash3.containsKey(sum) == false){
                         effperc = Calculate.effectivepercentile(h,b);
-                        effectivehandpercentilehash3.put(handboardkey, effperc);
+                        effectivehandpercentilehash3.put(sum, effperc);
                     }
                     else{
                         System.out.println("SKIP");
                     }
                 }
                 if (cardnumber == 4){
-                    if (effectivehandpercentilehash4.containsKey(handboardkey) == false){
+                    if (effectivehandpercentilehash4.containsKey(sum) == false){
                         effperc = Calculate.effectivepercentile(h,b);
-                        effectivehandpercentilehash4.put(handboardkey, effperc);
+                        effectivehandpercentilehash4.put(sum, effperc);
                     }
                 }
             }
